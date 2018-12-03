@@ -20,11 +20,12 @@ data_path = '/Users/liunianci/Downloads/smsspamcollection/SMSSpamCollection'
 with open(data_path, 'r') as f:
     data_content = []
     for line in f.readlines():
-        data_content.append(line)
-# print(len(data_content))
+        # print(line.split('\t'))
+        data_content.append(line.split('\t'))
+print(len(data_content))
 
 # 2. 规则化处理
-texts = [x[1:] for x in data_content]
+texts = [x[1] for x in data_content]
 label = [x[0] for x in data_content]
 texts = [x.lower() for x in texts]
 texts = [''.join(c for c in x if c not in string.punctuation and c not in punctuation) for x in texts]
@@ -92,11 +93,8 @@ for xi, x in enumerate(vocabulary_pro.fit_transform(train_data)):
     if len(train_acc_all) > 100:
         train_acc_avg.append(np.mean(train_acc_all[-100:]))
         # print(train_acc_avg)
-    # print(sess.run(tf.cast(tf.equal(y_pre, y_label), tf.float32)))
-    # accuracy = sess.run(tf.reduce_mean(tf.cast(tf.equal(y_pre, y_label), tf.float32)))
     if (xi+1)%100 == 0:
         print('Training Num #' + str(xi+1) + ': Loss = ' + str(loss_temp))
-        # print('Accuracy = ' + str(acc_temp))
 print('Train Accuracy is : {}'.format(np.mean(train_acc_all)))
 
 # 9. 测试
