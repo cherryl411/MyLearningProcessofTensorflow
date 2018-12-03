@@ -43,6 +43,7 @@ sess.run(init)
 # 5. 模型训练
 iter_num = 100
 loss_ = []
+acc = []
 for i in range(iter_num):
     rand_index = np.random.choice(len(iris_features), size=batch_size)
     feature_data = iris_features[rand_index]
@@ -52,11 +53,11 @@ for i in range(iter_num):
     w = sess.run(tf.transpose(weight))
     b = sess.run(bias)
     loss_.append(sess.run(loss, feed_dict={y_real:y_data, feature:feature_data}))
-    y_prediction = tf.round(tf.nn.sigmoid(w * feature + b))
-    accuracy = tf.reduce_mean(tf.cast(tf.equal(y_prediction, y_real), tf.float32))
+    y_prediction = sess.run(tf.round(tf.nn.sigmoid(y_pre)), feed_dict={feature:feature_data})
+    acc.append(y_prediction == iris_labels[rand_index])
     if i % 10 == 0:
         print('w:' + str(w) + '\t' + 'b:' + str(b))
-        print('Accuracy = ' + str(sess.run(accuracy, feed_dict={y_real:y_data, feature:feature_data})))
+        print('Train Accuracy is : {}'.format(np.mean(acc)))
 
 # 6. 绘图
 plt.plot(loss_, 'g-')
