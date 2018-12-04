@@ -17,6 +17,7 @@ import nltk
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 # 1. 读取数据
+# Todo 中文数据
 data_path = '/Users/liunianci/Downloads/smsspamcollection/SMSSpamCollection'
 with open(data_path, 'r') as f:
     data_content = []
@@ -37,7 +38,7 @@ label = [1. if x == 'spam' else 0. for x in label]
 def tokenizer(text):
     words = nltk.word_tokenize(text)
     return words
-tfidf = TfidfVectorizer(tokenizer=tokenizer, stop_words='english', max_features=1000)
+tfidf = TfidfVectorizer(tokenizer=tokenizer, stop_words='english', max_features=2000)
 sparse_mat = tfidf.fit_transform(texts)
 
 # 4. 分割训练集和测试集
@@ -49,7 +50,7 @@ train_label = np.array([x for xi, x in enumerate(label) if xi in train_indcts])
 test_label = np.array([x for xi, x in enumerate(label) if xi in test_indics])
 
 # 5. 声明变量、占位符
-max_size = 1000
+max_size = 2000
 W = tf.Variable(np.random.normal(size=(max_size, 1)), dtype=tf.float32)
 b = tf.Variable(np.random.normal(size=(1, 1)), dtype=tf.float32)
 x_data = tf.placeholder(shape=[None, max_size], dtype=tf.float32)
