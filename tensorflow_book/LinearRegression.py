@@ -45,11 +45,29 @@ init = tf.global_variables_initializer()
 sess = tf.Session()
 sess.run(init)
 
-# 8.运行
+# 8.运行+绘图
 iter_num = 200
+loss_ = []
 for step in range(iter_num):
     sess.run(train)
+    w = sess.run(w_pre)
+    b = sess.run(b_pre)
+
+    temp_loss = sess.run(loss)
+    loss_.append(temp_loss)
     if step % 20 == 0:
-        print(step, sess.run(w_pre), sess.run(b_pre))
+        print(step, w, b)
         print()
+fits = []
+for i in x_data1:
+    fits.append(w * i + b)
+
+plt.plot(x_data1, y_true, 'o', label = 'Origin')
+plt.plot(x_data1, fits, 'r-', label = 'Fit')
+plt.title('Curve-Fitting')
+plt.show()
+
+plt.plot(loss_, 'g-')
+plt.title('Loss Function')
+plt.show()
 
