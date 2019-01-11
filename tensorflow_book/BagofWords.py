@@ -5,7 +5,7 @@
 @project: tensorflow_cookbook
 @author: Cherry_L411@163.com
 @file: BagofWords.py
-@data: 2018-12-03
+@date: 2018-12-03
 
 """
 
@@ -28,7 +28,9 @@ print(len(data_content))
 texts = [x[1] for x in data_content]
 label = [x[0] for x in data_content]
 texts = [x.lower() for x in texts]
-texts = [''.join(c for c in x if c not in string.punctuation and c not in punctuation) for x in texts]
+texts = [
+    ''.join(
+        c for c in x if c not in string.punctuation and c not in punctuation) for x in texts]
 texts = [''.join(c for c in x if c not in '0123456789') for x in texts]
 texts = [' '.join(x.split()) for x in texts]
 label = [1. if x == 'spam' else 0. for x in label]
@@ -41,14 +43,17 @@ sentence_size = 25
 min_fre = 3
 
 # 3. 创建词汇表、声明One-Hot
-vocabulary_pro = tf.contrib.learn.preprocessing.VocabularyProcessor(sentence_size, min_fre)
+vocabulary_pro = tf.contrib.learn.preprocessing.VocabularyProcessor(
+    sentence_size, min_fre)
 vocabulary_pro.fit_transform(texts)
 embedding_size = len(vocabulary_pro.vocabulary_)
 # print(embedding_size)
 embedding_mat = tf.diag(tf.ones(shape=embedding_size))
 
 # 4. 分割训练集和测试集
-train_indcts = np.random.choice(len(texts), round(len(texts) * 0.8), replace=False)
+train_indcts = np.random.choice(
+    len(texts), round(
+        len(texts) * 0.8), replace=False)
 test_indics = np.array(list(set(range(len(texts))) - set(train_indcts)))
 train_data = [x for xi, x in enumerate(texts) if xi in train_indcts]
 test_data = [x for xi, x in enumerate(texts) if xi in test_indics]
@@ -59,7 +64,7 @@ test_label = [x for xi, x in enumerate(label) if xi in test_indics]
 W = tf.Variable(np.random.normal(size=(1, embedding_size)), dtype=tf.float32)
 b = tf.Variable(np.random.normal(size=(1, 1)), dtype=tf.float32)
 x_data = tf.placeholder(shape=[sentence_size], dtype=tf.int32)
-y_data = tf.placeholder(shape=[1,1], dtype=tf.float32)
+y_data = tf.placeholder(shape=[1, 1], dtype=tf.float32)
 
 # 6. 建模
 embedding_ = tf.nn.embedding_lookup(embedding_mat, x_data)
@@ -85,16 +90,16 @@ for xi, x in enumerate(vocabulary_pro.fit_transform(train_data)):
     # print(x.shape)
     # print(x)
     # print(y_label)
-    sess.run(train_step, feed_dict={x_data:x, y_data:y_label})
-    loss_temp = sess.run(loss, feed_dict={x_data:x, y_data:y_label})
-    y_pre = np.round(sess.run(predict_data, feed_dict={x_data:x}))
+    sess.run(train_step, feed_dict={x_data: x, y_data: y_label})
+    loss_temp = sess.run(loss, feed_dict={x_data: x, y_data: y_label})
+    y_pre = np.round(sess.run(predict_data, feed_dict={x_data: x}))
     acc_temp = train_label[xi] == y_pre
     train_acc_all.append(acc_temp)
     if len(train_acc_all) > 100:
         train_acc_avg.append(np.mean(train_acc_all[-100:]))
         # print(train_acc_avg)
-    if (xi+1)%100 == 0:
-        print('Training Num #' + str(xi+1) + ': Loss = ' + str(loss_temp))
+    if (xi + 1) % 100 == 0:
+        print('Training Num #' + str(xi + 1) + ': Loss = ' + str(loss_temp))
 print('Train Accuracy is : {}'.format(np.mean(train_acc_all)))
 
 # 9. 测试
@@ -102,7 +107,7 @@ test_acc_all = []
 test_acc_avg = []
 for xi, x in enumerate(vocabulary_pro.fit_transform(test_data)):
     y_label = [[test_label[xi]]]
-    y_pre = np.round(sess.run(predict_data, feed_dict={x_data:x}))
+    y_pre = np.round(sess.run(predict_data, feed_dict={x_data: x}))
     acc_temp = test_label[xi] == y_pre
     test_acc_all.append(acc_temp)
     if len(test_acc_all) > 100:

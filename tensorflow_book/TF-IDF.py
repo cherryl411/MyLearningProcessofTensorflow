@@ -5,7 +5,7 @@
 @project: tensorflow_cookbook
 @author: Cherry_L411@163.com
 @file: TF-IDF.py
-@data: 2018-12-03
+@date: 2018-12-03
 
 """
 
@@ -29,21 +29,30 @@ with open(data_path, 'r') as f:
 texts = [x[1] for x in data_content]
 label = [x[0] for x in data_content]
 texts = [x.lower() for x in texts]
-texts = [''.join(c for c in x if c not in string.punctuation and c not in punctuation) for x in texts]
+texts = [
+    ''.join(
+        c for c in x if c not in string.punctuation and c not in punctuation) for x in texts]
 texts = [''.join(c for c in x if c not in '0123456789') for x in texts]
 texts = [' '.join(x.split()) for x in texts]
 label = [1. if x == 'spam' else 0. for x in label]
+# print(texts)
+
 
 # 3. 分词、创建tf-idf矩阵
 def tokenizer(text):
     words = nltk.word_tokenize(text)
     return words
-tfidf = TfidfVectorizer(tokenizer=tokenizer, stop_words='english', max_features=2000)
+
+
+tfidf = TfidfVectorizer(tokenizer, stop_words='english', max_features=2000)
 sparse_mat = tfidf.fit_transform(texts)
 
 # 4. 分割训练集和测试集
-train_indcts = np.random.choice(sparse_mat.shape[0], round(sparse_mat.shape[0] * 0.8), replace=False)
-test_indics = np.array(list(set(range(sparse_mat.shape[0])) - set(train_indcts)))
+train_indcts = np.random.choice(
+    sparse_mat.shape[0], round(
+        sparse_mat.shape[0] * 0.8), replace=False)
+test_indics = np.array(
+    list(set(range(sparse_mat.shape[0])) - set(train_indcts)))
 train_data = sparse_mat[train_indcts]
 test_data = sparse_mat[test_indics]
 train_label = np.array([x for xi, x in enumerate(label) if xi in train_indcts])
@@ -79,11 +88,11 @@ for i in range(iter_num):
     rand_index = np.random.choice(train_data.shape[0], size=batch_size)
     rand_x = train_data[rand_index].todense()
     rand_y = np.transpose([train_label[rand_index]])
-    sess.run(train_step, feed_dict={y_data:rand_y, x_data:rand_x})
-    if (i+1)%100 == 0:
-        temp_loss = sess.run(loss, feed_dict={y_data:rand_y, x_data:rand_x})
+    sess.run(train_step, feed_dict={y_data: rand_y, x_data: rand_x})
+    if (i + 1) % 100 == 0:
+        temp_loss = sess.run(loss, feed_dict={y_data: rand_y, x_data: rand_x})
         # print(temp_loss)
         train_loss.append(temp_loss)
-        temp_acc = sess.run(acc, feed_dict={y_data:rand_y, x_data:rand_x})
+        temp_acc = sess.run(acc, feed_dict={y_data: rand_y, x_data: rand_x})
         print(temp_acc)
         train_acc.append(temp_acc)

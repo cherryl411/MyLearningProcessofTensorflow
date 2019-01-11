@@ -5,7 +5,7 @@
 @project: tensorflow_cookbook
 @author: Cherry_L411@163.com
 @file: IrisBinaryClassifier.py
-@data: 2018-11-30
+@date: 2018-11-30
 
 """
 
