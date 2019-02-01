@@ -5,8 +5,8 @@
 @project: python and ML
 @author: Cherry_L411@163.com
 @file: TextRank.py
-@data: 2019-01-08
-@Pay attention：The getKeyWords function'code was copied from Jieba.
+@date: 2019-01-08
+@Pay attention：It's an implemention of get key words and abstract by textRank. And one of the get key words function'code was copied from Jieba.
 
 """
 
