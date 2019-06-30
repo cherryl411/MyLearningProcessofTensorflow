@@ -16,10 +16,9 @@ sess = tf.Session()
 # data was initialized
 data_size = 25
 data_1d = np.random.normal(size=data_size)
-print(data_1d)
 x_input_1d = tf.placeholder(dtype=tf.float32, shape=[data_size])
 
-# declarte the convolution function
+# declare the convolution function
 def conv_layer_1d(input_1d, my_filter):
     # make 1d input to 4d
     input_2d = tf.expand_dims(input_1d, 0)
@@ -47,7 +46,7 @@ def activation_(input_1d):
 
 my_act_func = activation_(my_conv_output)
 
-# declarate the pool function
+# declarae the pool function
 def max_pool(input_1d, width):
     # # make the 1d input into 4d
     # input_2d = tf.expand_dims(input_1d, 0)
@@ -62,6 +61,7 @@ def max_pool(input_1d, width):
     return (pool_output_1d)
 
 my_pool_output = max_pool(my_act_func, 5)
+
 
 # fully connected layer
 def fully_connect(input_layer, num_output):
